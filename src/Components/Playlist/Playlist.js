@@ -6,7 +6,7 @@ import TrackList from "../TrackList/TrackList";
 class Playlist extends React.Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleNameChange.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
   }
 
   handleNameChange(event) {

@@ -1,5 +1,6 @@
 const clientId = process.env.REACT_APP_MY_CLIENT_ID;
-const redirectUri = "http://localhost:3000/";
+console.log("client ID", clientId);
+const redirectUri = "http://scottyfinsjammming.surge.sh";
 
 let accessToken;
 
@@ -27,6 +28,7 @@ const Spotify = {
   },
 
   search(term) {
+    console.log("searchA", term);
     const accessToken = Spotify.getAccessToken();
     return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
       headers: {
@@ -40,10 +42,14 @@ const Spotify = {
         if (!jsonResponse.tracks) {
           return [];
         }
+
         return jsonResponse.tracks.items.map((track) => ({
           id: track.id,
           name: track.name,
-          artists: track.artist[0].name,
+          artists:
+            track.artist && track.artist.length > 0
+              ? track.artist[0].name
+              : "Unknown Artist",
           album: track.album.name,
           uri: track.uri,
         }));
@@ -58,10 +64,12 @@ const Spotify = {
     const headers = { Authorization: `Bearer ${accessToken}` };
     let userId;
 
+    // makes a request ("fetch" which allows us use Promises) returns users Spotify ID from Spotify API
     return fetch("https://api.spotify.com/v1/me", { headers: headers })
       .then((response) => response.json())
       .then((jsonResponse) => {
         userId = jsonResponse.id;
+        // Creates new playlist via post request to Spotify using the userID and sets name to 'name' argument passed in then grabs the playlist ID and saves it to playlistID
         return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
           headers: headers,
           method: "POST",
@@ -71,6 +79,7 @@ const Spotify = {
       .then((response) => response.json())
       .then((jsonResponse) => {
         const playlistId = jsonResponse.id;
+        // Sets newly created playlists tracks via the trackUris arry passed as an argument via a post request to a specific Spotify API endpoint
         return fetch(
           `https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`,
           {
