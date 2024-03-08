@@ -1,6 +1,8 @@
 const clientId = process.env.REACT_APP_MY_CLIENT_ID;
-console.log("client ID", clientId);
-const redirectUri = "http://scottyfinsjammming.surge.sh";
+const redirectUri =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_PROD_REDIRECT_URI
+    : process.env.REACT_APP_LOCAL_REDIRECT_URI;
 
 let accessToken;
 
@@ -52,6 +54,7 @@ const Spotify = {
               : "Unknown Artist",
           album: track.album.name,
           uri: track.uri,
+          preview: track.preview_url,
         }));
       });
   },

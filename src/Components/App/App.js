@@ -6,6 +6,13 @@ import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
 import Spotify from "../../util/Spotify";
 
+// Fontawesome imports for global use
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab }  from '@fortawesome/free-brands-svg-icons';
+import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+
+library.add(fab, faPlay, faPause);
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -42,6 +49,7 @@ class App extends React.Component {
   }
 
   savePlaylist() {
+    console.log("savePlaylist function called");
     const trackUris = this.state.playlistTracks.map((track) => track.uri);
     Spotify.savePlaylist(this.state.playlistName, trackUris).then(() => {
       this.setState({
@@ -70,6 +78,7 @@ class App extends React.Component {
             <SearchResults
               searchResults={this.state.searchResults}
               onAdd={this.addTrack}
+              // playlistTracks={this.state.playlistTracks}
             />
             <Playlist
               playlistName={this.state.playlistName}
